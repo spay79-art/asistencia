@@ -33,7 +33,8 @@ ingreso y las operaciones del celular (`movil.*`).
 3. Para dejar el ícono en la pantalla de inicio:
    - **Android (Chrome):** aparece "Instalar app", o menú ⋮ → **Instalar aplicación**.
    - **iPhone (Safari):** botón Compartir → **Agregar a pantalla de inicio**.
-4. Entra con el correo y la clave de portero.
+4. Entra con su **nombre** y la clave provisoria que le dio el administrador (aparece en la ficha del miembro).
+   La primera vez, la app le pide elegir una clave propia.
 
 ## Actualizar la app
 

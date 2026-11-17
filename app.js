@@ -76,6 +76,7 @@
       var err = new Error(r.error || 'Error desconocido.');
       err.codigo = r.codigo || null;
       if (err.codigo === 'SESION') sesionVencida(err.message);
+      if (err.codigo === 'CAMBIAR_CLAVE') pantallaCambioClave('');
       throw err;
     });
   }
@@ -204,10 +205,10 @@
     estado.panel = null;
     app.innerHTML = '<div class="centro"><form class="tarjeta" data-form>' + marca() +
       (mensaje ? '<div class="aviso">' + esc(mensaje) + '</div>' : '') +
-      '<label class="campo"><span>Correo</span><input name="usuario" type="email" autocomplete="username" autocapitalize="none" required value="' + esc(leer(CLAVES.correo)) + '"></label>' +
+      '<label class="campo"><span>Nombre de usuario</span><input name="usuario" type="text" autocomplete="username" autocapitalize="words" required value="' + esc(leer(CLAVES.correo)) + '"></label>' +
       '<label class="campo"><span>Clave</span><input name="clave" type="password" autocomplete="current-password" required></label>' +
       '<button class="btn primario ancho" type="submit">Ingresar</button>' +
-      '<p class="suave" style="font-size:13px;margin-bottom:0">Entra con el correo y la clave de portero que te entregó la iglesia.' +
+      '<p class="suave" style="font-size:13px;margin-bottom:0">Entra con tu nombre y la clave que te entregó el administrador de la iglesia.' +
       (Cola.lista.length ? ' Tienes ' + Cola.lista.length + ' marcas pendientes: se enviarán al ingresar.' : '') + '</p>' +
       '<button class="btn enlace" type="button" data-cambiar-api style="margin-top:8px">Cambiar la dirección del sistema</button></form></div>';
     var form = app.querySelector('[data-form]');
@@ -229,12 +230,41 @@
         guardar(CLAVES.token, r.token);
         guardar(CLAVES.usuario, JSON.stringify(r.usuario));
         guardar(CLAVES.correo, r.usuario.usuario);
+        if (r.usuario.debe_cambiar_clave) return pantallaCambioClave(form.elements.clave.value);
         enviar();
         return inicio();
       }).catch(function (err) {
         estado.token = '';
         boton.disabled = false;
         boton.textContent = 'Ingresar';
+        aviso(err.red ? 'Sin conexión. Revisa la señal e intenta de nuevo.' : err.message, 'error');
+      });
+    });
+  }
+
+  // Primera vez (o clave provisoria nueva): elige una clave propia antes de continuar.
+  function pantallaCambioClave(provisoria) {
+    app.innerHTML = '<div class="centro"><form class="tarjeta" data-form>' + marca(estado.usuario ? estado.usuario.nombre : '') +
+      '<div class="aviso">Tu clave es provisoria. Elige una clave tuya para continuar: desde ahora solo tú la conocerás.</div>' +
+      (provisoria ? '' : '<label class="campo"><span>Clave provisoria</span><input name="actual" type="password" autocomplete="current-password" required></label>') +
+      '<label class="campo"><span>Clave nueva (mínimo 8 caracteres)</span><input name="nueva" type="password" autocomplete="new-password" required minlength="8"></label>' +
+      '<label class="campo"><span>Repite la clave nueva</span><input name="nueva2" type="password" autocomplete="new-password" required></label>' +
+      '<button class="btn primario ancho" type="submit">Guardar mi clave</button></form></div>';
+    var form = app.querySelector('[data-form]');
+    form.querySelector('input').focus();
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (form.elements.nueva.value !== form.elements.nueva2.value) { aviso('Las claves nuevas no coinciden.', 'error'); return; }
+      var boton = form.querySelector('[type=submit]');
+      boton.disabled = true;
+      api('auth.cambiarClave', { actual: provisoria || form.elements.actual.value, nueva: form.elements.nueva.value }).then(function () {
+        estado.usuario.debe_cambiar_clave = false;
+        guardar(CLAVES.usuario, JSON.stringify(estado.usuario));
+        aviso('Clave guardada. ¡Bienvenido!');
+        enviar();
+        return inicio();
+      }).catch(function (err) {
+        boton.disabled = false;
         aviso(err.red ? 'Sin conexión. Revisa la señal e intenta de nuevo.' : err.message, 'error');
       });
     });
@@ -569,6 +599,7 @@
       estado.timers.push(setInterval(sondear, 10000));
       if (!estado.api) return pantallaConexion();
       if (!estado.token || !estado.usuario) return pantallaIngreso();
+      if (estado.usuario.debe_cambiar_clave) return pantallaCambioClave('');
       return inicio();
     });
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () { /* funciona igual, sin modo instalable */ });
