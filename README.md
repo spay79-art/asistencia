@@ -11,7 +11,7 @@ ingreso y las operaciones del celular (`movil.*`).
 | `config.js` | Dirección del servidor (opcional: el QR ya la trae) |
 | `manifest.webmanifest` | Nombre, ícono y pantalla completa (lo que permite instalarla) |
 | `sw.js` | Guarda la app en el teléfono para que abra sin señal |
-| `iconos/` | Íconos (se regeneran con `python iconos/generar.py`) |
+| `iconos/` | Íconos, hechos con el logo de la iglesia (se regeneran con `python marca/generar.py` del proyecto principal) |
 
 ## Publicarla en GitHub Pages (gratis)
 

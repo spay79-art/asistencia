@@ -1,7 +1,7 @@
 // Service worker: guarda los archivos de la app para que abra sin señal y cargue al instante.
 // Las llamadas al servidor (Apps Script) nunca se guardan: van siempre a la red (la cola de marcas vive en app.js).
 // Al publicar una versión nueva de la app, sube el número de VERSION para que los teléfonos la tomen.
-var VERSION = 'asistencia-v2';
+var VERSION = 'asistencia-v3';
 var ARCHIVOS = [
   './', 'index.html', 'app.js', 'config.js', 'estilos.css', 'manifest.webmanifest',
   'iconos/icono-180.png', 'iconos/icono-192.png', 'iconos/icono-512.png', 'iconos/icono-mascara-512.png',

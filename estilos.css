@@ -1,13 +1,13 @@
 :root {
-  --fondo: #f4f6f9; --superficie: #ffffff; --superficie-2: #eef1f5; --borde: #d9dee6;
-  --texto: #1b2430; --texto-suave: #5d6b7c; --primario: #1f3a5f; --primario-texto: #ffffff;
+  --fondo: #f3f5ee; --superficie: #ffffff; --superficie-2: #eef2e6; --borde: #dde3d2;
+  --texto: #1f2a18; --texto-suave: #5f6b55; --primario: #3a7a0c; --primario-texto: #ffffff;
   --ok: #1e8a4c; --peligro: #c0392b; --acento: #b9770e;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --fondo: #10151c; --superficie: #18202a; --superficie-2: #212b37; --borde: #2f3b4a;
-    --texto: #e8edf3; --texto-suave: #9aa8b8; --primario: #7fb0ea; --primario-texto: #10151c;
+    --fondo: #161a14; --superficie: #1f251c; --superficie-2: #283023; --borde: #333d2e;
+    --texto: #e6eae1; --texto-suave: #a2ab98; --primario: #93c95a; --primario-texto: #161a14;
     --ok: #4cc27f; --peligro: #ef6b5b; --acento: #f0b34e;
     color-scheme: dark;
   }
@@ -25,7 +25,7 @@ button, input, select { font: inherit; color: inherit; }
 .cargando { color: var(--texto-suave); }
 .tarjeta { background: var(--superficie); border: 1px solid var(--borde); border-radius: 14px; padding: 18px; width: 100%; max-width: 420px; }
 .marca { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.marca img { width: 48px; height: 48px; border-radius: 12px; }
+.marca img { width: 52px; height: 52px; border-radius: 50%; }
 .marca strong { display: block; font-size: 18px; }
 .suave { color: var(--texto-suave); }
 .campo { display: grid; gap: 4px; margin-bottom: 12px; }
