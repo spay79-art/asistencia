@@ -180,6 +180,9 @@
   }
 
   // ── Pantallas: conexión e ingreso ────────────────────────────────
+  // Niño = hasta 12 años (el servidor lo manda en "nino"; las visitas usan la categoría simple Niño).
+  function esNino(m) { return m.nino !== undefined ? Boolean(m.nino) : m.categoria === 'NINO'; }
+
   function marca(subtitulo) {
     return '<div class="marca"><img src="iconos/icono-192.png" alt=""><div><strong>Asistencia</strong>' +
       '<span class="suave">' + esc(subtitulo || 'Software Iglesia') + '</span></div></div>';
@@ -332,7 +335,7 @@
       (lectura ? '' : '<input type="search" class="buscar" data-buscar placeholder="Buscar por nombre…" autocomplete="off">' +
         '<div class="lista" data-por-marcar>' + p.miembros.map(function (m) {
           return '<button class="persona" data-marcar="' + esc(m.id) + '" data-nombre="' + esc(sinTildes(m.nombre)) + '">＋ ' + esc(m.nombre) +
-            (m.categoria === 'NINO' ? ' <small>Niño</small>' : '') + (m.rango_etario ? ' <small>' + esc(m.rango_etario) + '</small>' : '') + '</button>';
+            (esNino(m) ? ' <small>' + esc(m.categoria_nombre || 'Niño') + '</small>' : '') + (m.rango_etario ? ' <small>' + esc(m.rango_etario) + '</small>' : '') + '</button>';
         }).join('') + '</div>') +
       '<h2 class="titulo">Presentes</h2>' +
       grupos.map(function (g) {
@@ -376,7 +379,7 @@
     app.querySelectorAll('[data-grupo-presentes]').forEach(function (g) { g.hidden = !g.querySelector('[data-presente]:not([hidden])'); });
     filtrar();
     var presentes = p.miembros.filter(function (m) { return m.presente; });
-    var adultos = presentes.filter(function (m) { return m.categoria !== 'NINO'; }).length;
+    var adultos = presentes.filter(function (m) { return !esNino(m); }).length;
     var porClase = p.reunion.usa_rangos_etarios ? (p.rangos || []).map(function (n) {
       return { n: n, c: presentes.filter(function (m) { return m.rango_etario === n; }).length };
     }).filter(function (x) { return x.c; }) : [];
@@ -438,7 +441,7 @@
   function formVisita() {
     var p = estado.panel;
     var d = document.getElementById('dialogo');
-    var invitadores = p.miembros.filter(function (m) { return m.categoria !== 'NINO'; });
+    var invitadores = p.miembros.filter(function (m) { return !esNino(m); });
     d.innerHTML = '<form method="dialog" data-form><h2>Nueva visita</h2>' +
       '<label class="campo"><span>Nombre</span><input name="nombre" list="dl-visitas" required maxlength="200" autocomplete="off"></label>' +
       '<datalist id="dl-visitas">' + p.sugerencias.map(function (s) { return '<option value="' + esc(s.nombre) + '"></option>'; }).join('') + '</datalist>' +
