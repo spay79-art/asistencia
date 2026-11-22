@@ -250,7 +250,7 @@
     app.innerHTML = '<div class="centro"><form class="tarjeta" data-form>' + marca(estado.usuario ? estado.usuario.nombre : '') +
       '<div class="aviso">Tu clave es provisoria. Elige una clave tuya para continuar: desde ahora solo tú la conocerás.</div>' +
       (provisoria ? '' : '<label class="campo"><span>Clave provisoria</span><input name="actual" type="password" autocomplete="current-password" required></label>') +
-      '<label class="campo"><span>Clave nueva (mínimo 8 caracteres)</span><input name="nueva" type="password" autocomplete="new-password" required minlength="8"></label>' +
+      '<label class="campo"><span>Clave nueva (mínimo 6 caracteres, con letras y números)</span><input name="nueva" type="password" autocomplete="new-password" required minlength="6"></label>' +
       '<label class="campo"><span>Repite la clave nueva</span><input name="nueva2" type="password" autocomplete="new-password" required></label>' +
       '<button class="btn primario ancho" type="submit">Guardar mi clave</button></form></div>';
     var form = app.querySelector('[data-form]');
